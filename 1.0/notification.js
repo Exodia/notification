@@ -1,24 +1,26 @@
 KISSY.add(function () {
 
-
-
-    var _instance = null,
-        _permissionStatus = -1,
-        _eventTable = {
-            "show": 1,
-            "error": 1,
-            "close": 1,
-            "click": 1
-        };
-
-
     /**
-     *调用例子：
-     * var DN = window.XX.DesktopNotify;
-     * DN.requestPermission(function(){
-	 * 	  DN.show("http://xxx", "hello", "world");
-	 * });
+     *
+     * @param title {String}
+     * @param options {Object}
+     * @param options.body {String}
+     * @param options.icon {String}
+     * @param options.dir {String}
+     * @param options.tag {String}
+     * @parma options.onshow {function}
+     * @parma options.onclose {function}
+     * @parma options.onclick {function}
+     * @parma options.onerror {function}
+     * @constructor
      */
+    function DesktopNotify(title, options) {
+       this.title = title;
+
+    }
+
+
+
     var DesktopNotify = {
 
         /**
