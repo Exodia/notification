@@ -3,12 +3,16 @@ KISSY.add(function () {
     var Notification = window.Notification,
         webkitNotify = window.webkitNotifications
 
-    var router = function (events, scope) {
-        var args = [].slice.call(arguments, 2)
+    var createRouter = function (notify) {
 
-        events[type].forEach(function (fn) {
-            fn.apply(scope, args)
-        })
+        return function (ev) {
+            var events = notify._events
+
+            events[ev.type].forEach(function (fn) {
+                fn.call(notify, ev)
+            })
+        }
+
     }
 
     /**
@@ -36,10 +40,14 @@ KISSY.add(function () {
             "error": []
         }
 
-        this._router = function () {
+        var me = this
 
+        this._router = function (ev) {
+            console.log(ev)
+            me._events[ev.type].forEach(function (fn) {
+                fn.call(me, ev)
+            })
         }
-
 
         options.autoShow && this.show()
     }
@@ -113,13 +121,24 @@ KISSY.add(function () {
 
             if (Notification) {
                 this._instance = Notification && new Notification(this._title, options)
+                this._initEvents()
             } else {
                 this._instance = webkitNotify.createNotification(options.icon, this._title, options.body)
                 this._instance.dir = options.dir
+                this._initEvents()
                 this._instance.show()
             }
 
             return this
+        },
+
+        _initEvents: function () {
+            var ins = this._instance,
+                events = this._events
+
+            for (var type in events) {
+                ins.addEventListener(type, this._router, false)
+            }
         },
 
 
@@ -156,6 +175,8 @@ KISSY.add(function () {
 
             this._events[type].push(fn)
 
+            return this
+
         },
 
         /**
@@ -172,14 +193,9 @@ KISSY.add(function () {
                 index
 
             if (!fn) {
-                this._instance && events[type].forEach(function (handler) {
-                    this._instance.removeEventListener(type, handler, false)
-                })
-
                 this._events[type] = []
 
             } else {
-                this._instance && this._instance.removeEventListener(type, handler, false)
                 index = events.indexOf(fn)
                 index > -1 && events.splice(index, 1)
             }

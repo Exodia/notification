@@ -13,19 +13,36 @@
     if (S.Config.debug) {
         var srcPath = "../../../";
         S.config({
-            packages:[
+            packages: [
                 {
-                    name:"gallery",
-                    path:srcPath,
-                    charset:"utf-8",
-                    ignorePackageNameInUri:true
+                    name: "gallery",
+                    path: srcPath,
+                    charset: "utf-8",
+                    ignorePackageNameInUri: true
                 }
             ]
         });
     }
 
+    function handler(ev) {
+        alert(ev.type)
+    }
+
     S.use('gallery/notification/1.0/index', function (S, Notification) {
-         Notification.show(111, 222, "http://0.gravatar.com/avatar/eba2d15b16971d6ea0800c8cc1801a1c?s=70")
+        notify = new Notification(11, {
+            body: 2323,
+            icon: "http://0.gravatar.com/avatar/eba2d15b16971d6ea0800c8cc1801a1c?s=70"
+        })
+        notify.on('show', handler).on('close', handler).
+                on('error', handler).on('click', handler)
+        document.body.onclick =
+                function () {
+                    Notification.requestPermission(function (p) {
+                        notify.show()
+                    })
+                }
+
+//         Notification.show(111, 222, "http://0.gravatar.com/avatar/eba2d15b16971d6ea0800c8cc1801a1c?s=70")
     })
 </script>
 </body>
