@@ -3,16 +3,15 @@
  * @author 踏风<tafeng.dxx@taobao.com>
  * @module notification
  **/
-KISSY.add(function (S) {
+KISSY.add(function (S, Notification) {
     /**
      * 桌面通知组件
      * @class Notification
      */
-    function Notification(config) {
-
-    }
 
     return Notification;
+}, {
+    requires: ['./notification']
 });
 
 
