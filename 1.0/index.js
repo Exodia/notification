@@ -4,10 +4,6 @@
  * @module notification
  **/
 KISSY.add(function (S, Notification) {
-    /**
-     * 桌面通知组件
-     * @class Notification
-     */
 
     return Notification;
 }, {

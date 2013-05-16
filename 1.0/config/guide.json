@@ -1,0 +1,13 @@
+[
+    {
+        "title": "DesktopNotify桌面通知组件",
+        "items": [
+            {
+                "name": "开始",
+                "url": "../guide",
+                "title": "开始使用DesktopNotify",
+                "description": "这份文档将带您快速的上手使用桌面通知"
+            }
+        ]
+    }
+]

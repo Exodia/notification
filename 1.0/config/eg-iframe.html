@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>DesktopNotify Examples</title>
+
+    <script src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy.js?t=20130228.js"></script>
+    <script type="text/javascript">
+        var S = KISSY;
+        if (S.Config.debug) {
+            var srcPath = "../../../";
+            S.config({
+                packages: [
+                    {
+                        name: "gallery",
+                        path: srcPath,
+                        charset: "utf-8",
+                        ignorePackageNameInUri: true
+                    }
+                ]
+            });
+        }
+
+        function loadInlineExample(code, options, callback) {
+            try {
+                document.body.innerHTML = '';
+                eval(code);
+                callback && callback(true);
+            } catch (e) {
+                document.body.innerHTML = e;
+                callback && callback(false, e);
+            }
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

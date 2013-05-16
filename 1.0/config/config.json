@@ -1,0 +1,6 @@
+{
+    "--title": "DesktopNotify帮助文档",
+    "--output": "../doc/",
+    "--eg-iframe": "eg-iframe.html",
+    "--": ["../notification.js"]
+}

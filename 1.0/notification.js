@@ -1,33 +1,39 @@
+;
 KISSY.add(function () {
-
     var Notification = window.Notification,
         webkitNotify = window.webkitNotifications
 
-    var createRouter = function (notify) {
-
-        return function (ev) {
-            var events = notify._events
-
-            events[ev.type].forEach(function (fn) {
-                fn.call(notify, ev)
-            })
-        }
-
-    }
 
     /**
+     * 桌面通知组件, 对W3C标准的Notication以及早期版本的webkitNotications做了封装,
+     * 提供更加方便的接口, 简单的示例如下:
+     *      @example
+     *      function handler(ev){
+     *          alert(ev.type);
+     *      }
      *
-     * @param title {String}
-     * @param options {Object}
-     * @param options.body {String}
-     * @param options.icon {String}
-     * @param options.dir {String}
-     * @param options.tag {String}
-     * @parma options.onshow {function}
-     * @parma options.onclose {function}
-     * @parma options.onclick {function}
-     * @parma options.onerror {function}
-     * @constructor
+     *      KISSY.use('gallery/notification/1.0/index', function (S, Notification) {
+     *          document.onclick = function () {
+     *               //请求权限
+     *               Notification.requestPermission(function (p) {
+     *                    var notify = new Notification("我是标题", {
+     *                          body: "我是内容体",
+     *                          //icon URL mac下的safari和chrome不支持
+     *                          icon: "http://0.gravatar.com/avatar/eba2d15b16971d6ea0800c8cc1801a1c?s=70",
+     *                          //文字方向, mac下safari和chrome不支持
+     *                          dir: "rtl"
+     *                     });
+     *
+     *                    notify.on('show', handler).on('close', handler).
+     *                      on('error', handler).on('click', handler);
+     *
+     *                   //弹出通知
+     *                   notify.show();
+     *               })
+     *          }
+     *       })
+     *
+     * @class DesktopNotify
      */
     function DesktopNotify(title, options) {
         this._title = title
@@ -43,7 +49,6 @@ KISSY.add(function () {
         var me = this
 
         this._router = function (ev) {
-            console.log(ev)
             me._events[ev.type].forEach(function (fn) {
                 fn.call(me, ev)
             })
@@ -52,68 +57,28 @@ KISSY.add(function () {
         options.autoShow && this.show()
     }
 
-    /**
-     * 快速显示一个桌面通知
-     * @param title
-     * @param {options} body
-     * @param {options} icon
-     * @static
-     */
-    DesktopNotify.show = function (title, body, icon) {
-        Notification && new Notification(title, {
-            body: body,
-            icon: icon
-        }) || webkitNotify && new webkitNotify.createNotification(icon, title, body).show()
-    }
-
-    /**
-     * 检查权限状态
-     * @return {Number}: 0为允许，1为不允许， 2为禁止
-     */
-    DesktopNotify.checkPermission = function () {
-
-    }
-
-    /**
-     * 检查是否得到授权
-     * @static
-     * @return {Boolean}： true表示得到授权
-     */
-    DesktopNotify.isPermitted = function () {
-        return Notification.permission && Notification.permission === 'granted' ||
-            webkitNotify.checkPermission() == 0
-    }
-
-
-    /**
-     * 请求授权
-     * @static
-     * @param cb {function} 得到授权后的回调函数
-     * @return this
-     */
-    DesktopNotify.requestPermission = function (cb) {
-        (Notification || webkitNotify).requestPermission(cb)
-
-        return this
-    }
-
-
-    /**
-     * @static
-     * 检测是否支持Notification，支持返回true
-     */
-    DesktopNotify.isSupport = function () {
-        return 'Notification' in window || 'webkitNotifications' in window;
-    }
-
-
     DesktopNotify.prototype = {
 
+        /**
+         * @method constructor
+         * @param title {String}
+         * @param options {Object}
+         * @param options.body {String}
+         * @param options.icon {String}
+         * @param options.dir {String}
+         * @param options.tag {String}
+         * @param options.onshow {function}
+         * @param options.onclose {function}
+         * @param options.onclick {function}
+         * @param options.onerror {function}
+         */
         constructor: DesktopNotify,
 
         /**
          * 弹出一个文本桌面通知
-         * @member DesktopNofity
+         *
+         * @method show
+         * @member DesktopNotify
          * @return this
          */
         show: function () {
@@ -145,6 +110,7 @@ KISSY.add(function () {
         /**
          * 弹出一个HTML桌面通知, Notification标准不支持该功能, 最新版的chrome也移除了该功能, 慎用
          *
+         * @member DesktopNotify
          * @param {String} url:html链接资源
          * @deprecated
          */
@@ -152,9 +118,12 @@ KISSY.add(function () {
 
         },
 
+
         /***
          * 关闭一个桌面通知
          *
+         * @method
+         * @member DesktopNotify
          * @param {Object} cb： 隐藏后的回调函数
          * @return this
          */
@@ -165,6 +134,9 @@ KISSY.add(function () {
 
         /**
          * 添加事件监听函数
+         *
+         * @method
+         * @member DesktopNotify
          * @param {Object} type: 事件类型
          * @param {Object} fn: 监听函数
          */
@@ -179,8 +151,12 @@ KISSY.add(function () {
 
         },
 
+
         /**
          * 移除事件监听函数
+         *
+         * @method
+         * @member DesktopNotify
          * @param {Object} type: 事件类型
          * @param {Object} fn: 监听函数
          */
@@ -202,6 +178,79 @@ KISSY.add(function () {
 
             return this
         }
+    }
+
+
+    /**
+     * 快速显示一个桌面通知
+     *
+     * @property
+     * @method show
+     * @param title
+     * @param body
+     * @param icon
+     * @member DesktopNotify
+     * @static
+     */
+    DesktopNotify.show = function (title, body, icon) {
+        Notification && new Notification(title, {
+            body: body,
+            icon: icon
+        }) || webkitNotify && new webkitNotify.createNotification(icon, title, body).show()
+    }
+
+
+    /**
+     * 检查权限状态, 0为允许, 1为不允许, 2为禁止
+     * @method checkPermission
+     * @member DesktopNotify
+     * @return {Number}
+     * @static
+     */
+    DesktopNotify.checkPermission = function () {
+
+    }
+
+
+    /**
+     * 检查是否得到授权
+     *
+     * @method isPermitted
+     * @static
+     * @member DesktopNotify
+     * @return {Boolean}： true表示得到授权
+     */
+    DesktopNotify.isPermitted = function () {
+        return Notification.permission && Notification.permission === 'granted' ||
+            webkitNotify.checkPermission() == 0
+    }
+
+
+    /**
+     * 请求授权
+     *
+     * @method requestPermission
+     * @static
+     * @member DesktopNotify
+     * @param cb {function(permission)} 得到授权后的回调函数,将传入权限字符串作为参数
+     * @return this
+     */
+    DesktopNotify.requestPermission = function (cb) {
+        (Notification || webkitNotify).requestPermission(cb)
+
+        return this
+    }
+
+
+    /**
+     * 检测是否支持Notification，支持返回true
+     *
+     * @method isSupport
+     * @static
+     * @member DesktopNotify
+     */
+    DesktopNotify.isSupport = function () {
+        return 'Notification' in window || 'webkitNotifications' in window;
     }
 
     return DesktopNotify
