@@ -1,8 +1,8 @@
 /*
 combined files : 
 
-1.0/notification
-1.0/index
+gallery/notification/1.0/notification
+gallery/notification/1.0/index
 
 */
 ;
@@ -269,7 +269,7 @@ KISSY.add('gallery/notification/1.0/notification',function () {
  * @author 踏风<tafeng.dxx@taobao.com>
  * @module notification
  **/
-KISSY.add('1.0/index',function (S, Notification) {
+KISSY.add('gallery/notification/1.0/index',function (S, Notification) {
 
     return Notification;
 }, {
