@@ -13,6 +13,7 @@ KISSY.add('gallery/notification/1.0/notification',function () {
 
     /**
      * 桌面通知组件, 对W3C标准的Notication以及早期版本的webkitNotications做了封装,
+     * 支持的浏览器: chrome,  FireFox Aurora, FireFox Nightly, Safari 6
      * 提供更加方便的接口, 简单的示例如下:
      *      @example
      *      function handler(ev){
@@ -68,21 +69,23 @@ KISSY.add('gallery/notification/1.0/notification',function () {
 
         /**
          * @method constructor
-         * @param title {String}
-         * @param options {Object}
-         * @param options.body {String}
-         * @param options.icon {String}
-         * @param options.dir {String}
-         * @param options.tag {String}
-         * @param options.onshow {function}
-         * @param options.onclose {function}
-         * @param options.onclick {function}
-         * @param options.onerror {function}
+         * @param title {String} 通知对话框标题
+         * @param options {Object} 其他配置项
+         * @param options.body {String} 对话框内容体
+         * @param options.icon {String} 对话框icon, Mac下chrome和safari不支持
+         * @param options.dir {String}  对话框内容文字方向, 可取"ltr", "rtl"; Mac下chrome和safari不支持
+         * @param options.tag {String}  对话框标签, 会替代当前具有同样标签的对话框
+         * @param options.onshow {function} 回调函数, 当对话框展示时触发,
+         * FF和webkit的触发时机有差异, FF在对话框显示前触发, 而webkit则在显示后触发
+         *
+         * @param options.onclose {function} 回调函数, 当对话框关闭时触发
+         * @param options.onclick {function} 回调函数, 当点击对话框触发
+         * @param options.onerror {function} 回调函数, 当调用出现错误时触发,比如拒绝授权
          */
         constructor: DesktopNotify,
 
         /**
-         * 弹出一个文本桌面通知
+         * 弹出桌面通知
          *
          * @method show
          * @member DesktopNotify
@@ -113,28 +116,14 @@ KISSY.add('gallery/notification/1.0/notification',function () {
             }
         },
 
-
-        /**
-         * 弹出一个HTML桌面通知, Notification标准不支持该功能, 最新版的chrome也移除了该功能, 慎用
-         *
-         * @member DesktopNotify
-         * @param {String} url:html链接资源
-         * @deprecated
-         */
-        showHTML: function (url) {
-
-        },
-
-
         /***
-         * 关闭一个桌面通知
+         * 关闭一个桌面通知, 当对话框已经被关闭时, 对应的close事件不会触发
          *
          * @method
          * @member DesktopNotify
-         * @param {Object} cb： 隐藏后的回调函数
          * @return this
          */
-        close: function (cb) {
+        close: function () {
             this._instance && this._instance.close()
         },
 
@@ -160,7 +149,7 @@ KISSY.add('gallery/notification/1.0/notification',function () {
 
 
         /**
-         * 移除事件监听函数
+         * 移除事件监听函数, 未传入fn,则移除指定事件的所有监听函数
          *
          * @method
          * @member DesktopNotify
@@ -193,9 +182,9 @@ KISSY.add('gallery/notification/1.0/notification',function () {
      *
      * @property
      * @method show
-     * @param title
-     * @param body
-     * @param icon
+     * @param title 通知标题
+     * @param body 通知内容体
+     * @param icon 对话框url
      * @member DesktopNotify
      * @static
      */
@@ -263,7 +252,6 @@ KISSY.add('gallery/notification/1.0/notification',function () {
     return DesktopNotify
 
 })
-
 /**
  * @fileoverview 桌面通知组件
  * @author 踏风<tafeng.dxx@taobao.com>
