@@ -1,1 +1,1 @@
-[点我进入尝鲜版~](../doc/index.html#!/guide)
+[点我进入尝鲜版~](../doc/index.html#!/api/DesktopNotify)
